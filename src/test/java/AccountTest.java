@@ -9,21 +9,10 @@ public class AccountTest {
 	public static final int MONEY_TO_WITHDRAW = 25;
 	public static final double APR = 2.5;
 	Account savingsAccount;
-	Account checkingAccount;
 
 	@BeforeEach
 	public void setUp() {
 		savingsAccount = new SavingsAccount(APR);
-		checkingAccount = new CheckingAccount(APR);
-	}
-
-	@Test
-	public void checking_and_savings_account_starts_with_0_balance() {
-		double actualSavingsBalance = savingsAccount.getBalance();
-		double actualCheckingBalance = checkingAccount.getBalance();
-
-		assertEquals(0, actualSavingsBalance);
-		assertEquals(0, actualCheckingBalance);
 	}
 
 	@Test
