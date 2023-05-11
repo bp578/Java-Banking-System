@@ -8,7 +8,7 @@ public class CreateCommandValidatorTest {
 		String command = "";
 		CreateCommandValidator createCommandValidator = new CreateCommandValidator();
 
-		boolean actual = createCommandValidator(command);
+		boolean actual = createCommandValidator.validate(command);
 
 		assertFalse(actual);
 	}
