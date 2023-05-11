@@ -1,12 +1,20 @@
 public class CreateCommandValidator {
-	private String command;
+    private String[] command;
+    private String action; // arg 1
 
-	public CreateCommandValidator() {
-	}
+    // All tests on each part of the command must pass for the whole command to pass
+    public boolean validate(String commandStr) {
+        this.command = commandStr.split(" ");
+        this.action = command[0];
 
-	public boolean validate(String command) {
-		this.command = command;
-		return false;
-	}
+        return validateAction(action);
+    }
 
+    public boolean validateAction(String action) {
+        if (action.equalsIgnoreCase("create")) {
+            return true;
+        } else {
+            return false;
+        }
+    }
 }
