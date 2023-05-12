@@ -22,7 +22,7 @@ public class CreateCommandValidatorTest {
 		assertFalse(actual);
 	}
 
-	// Tests dealing with the first argument
+	// Tests dealing with the first argument (action)
 	@Test
 	public void missing_create_is_invalid() {
 		command = "savings 12345678 0.1";
@@ -54,6 +54,44 @@ public class CreateCommandValidatorTest {
 		boolean actual = createCommandValidator.validate(command);
 
 		assertFalse(actual);
+	}
+
+	// Tests dealing with the second argument (account type)
+	@Test
+	public void missing_account_type_is_invalid() {
+		command = "create 12345678 0.1";
+		boolean actual = createCommandValidator.validate(command);
+
+		assertFalse(actual);
+	}
+
+	@Test
+	public void second_argument_must_be_an_account_type() {
+		String savingsCommand = "create savings 12345678 0.1";
+		String checkingCommand = "create checking 12345678 0.1";
+		String cdCommand = "create cd 12345678 0.1";
+
+		assertTrue(createCommandValidator.validate(savingsCommand));
+		assertTrue(createCommandValidator.validate(checkingCommand));
+		assertTrue(createCommandValidator.validate(cdCommand));
+
+	}
+
+	@Test
+	public void second_argument_is_case_insensitive() {
+		String command = "create SaVinGs 12345678 0.1";
+		boolean actual = createCommandValidator.validate(command);
+
+		assertTrue(actual);
+	}
+
+	@Test
+	public void typo_in_second_argument_is_invalid() {
+		String command = "create svngs 12345678 0.1";
+		boolean actual = createCommandValidator.validate(command);
+
+		assertFalse(actual);
+
 	}
 
 }
