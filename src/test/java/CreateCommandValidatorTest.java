@@ -94,4 +94,45 @@ public class CreateCommandValidatorTest {
 
 	}
 
+	// Tests dealing with the 3rd argument (account ID)
+	@Test
+	public void missing_ID_is_invalid() {
+		String command = "create savings 0.1";
+		boolean actual = createCommandValidator.validate(command);
+
+		assertFalse(actual);
+	}
+
+	@Test
+	public void third_argument_must_be_an_ID() {
+		String command = "create savings 12345678 0.1";
+		boolean actual = createCommandValidator.validate(command);
+
+		assertTrue(actual);
+	}
+
+	@Test
+	public void ID_must_contain_numbers_only() {
+		String command = "create savings 12EA56T8 0.1";
+		boolean actual = createCommandValidator.validate(command);
+
+		assertFalse(actual);
+	}
+
+	@Test
+	public void ID_cannot_be_less_than_8_characters() {
+		String command = "create savings 1234567 0.1";
+		boolean actual = createCommandValidator.validate(command);
+
+		assertFalse(actual);
+	}
+
+	@Test
+	public void ID_cannot_be_more_than_8_characters() {
+		String command = "create savings 123456789 0.1";
+		boolean actual = createCommandValidator.validate(command);
+
+		assertFalse(actual);
+	}
+
 }
