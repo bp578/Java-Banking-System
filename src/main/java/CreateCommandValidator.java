@@ -1,30 +1,14 @@
-public class CreateCommandValidator {
-	private String[] command;
-	private String action; // arg 1
-	private String accountType; // arg 2
-	private String accountId; // arg 3
-	private String apr; // arg 4
-	private String balance; // arg 5 (cd only)
-
+public class CreateCommandValidator extends CommandValidator {
 	// All tests on each part of the command must pass for the whole command to pass
+	@Override
 	public boolean validate(String commandStr) {
-		this.command = commandStr.split(" ");
-
+		parse(commandStr);
 		if (command.length == 4) {
-			this.action = command[0];
-			this.accountType = command[1];
-			this.accountId = command[2];
-			this.apr = command[3];
-			return actionIsValid(action) && accountTypeIsValid(accountType) && accountIdIsValid(accountId)
-					&& APRisValid(apr);
+			return actionIsValid(argument1) && accountTypeIsValid(argument2) && accountIdIsValid(argument3)
+					&& APRisValid(argument4);
 		} else if (command.length == 5) {
-			this.action = command[0];
-			this.accountType = command[1];
-			this.accountId = command[2];
-			this.apr = command[3];
-			this.balance = command[4];
-			return actionIsValid(action) && accountTypeIsValid(accountType) && accountIdIsValid(accountId)
-					&& APRisValid(apr) && balanceIsValid(balance);
+			return actionIsValid(argument1) && accountTypeIsValid(argument2) && accountIdIsValid(argument3)
+					&& APRisValid(argument4) && balanceIsValid(argument5);
 		} else {
 			return false;
 		}
@@ -45,21 +29,6 @@ public class CreateCommandValidator {
 			return false;
 		}
 
-	}
-
-	private boolean accountIdIsValid(String accountId) {
-		// Check length and make sure all characters are numbers
-		if (accountId.length() == 8) {
-			try {
-				Integer.parseInt(accountId);
-			} catch (NumberFormatException e) {
-				return false;
-			}
-		} else {
-			return false;
-		}
-
-		return true;
 	}
 
 	private boolean APRisValid(String aprStr) {
