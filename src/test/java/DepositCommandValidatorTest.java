@@ -172,4 +172,14 @@ public class DepositCommandValidatorTest {
 
 	}
 
+	@Test
+	public void deposit_with_incorrect_id_is_valid() {
+		bank.addAccount("12345678", savingsAccount);
+		command = "deposit 11111111 500";
+		boolean actual = depositCommandValidator.validate(command);
+
+		assertFalse(actual);
+
+	}
+
 }
