@@ -7,11 +7,13 @@ import org.junit.jupiter.api.Test;
 public class CreateCommandValidatorTest {
 	String command;
 	CreateCommandValidator createCommandValidator;
+	Bank bank;
 
 	@BeforeEach
 	public void setUp() {
 		command = "";
-		createCommandValidator = new CreateCommandValidator();
+		bank = new Bank();
+		createCommandValidator = new CreateCommandValidator(bank);
 	}
 
 	@Test
@@ -248,6 +250,36 @@ public class CreateCommandValidatorTest {
 		boolean actual = createCommandValidator.validate(command);
 
 		assertFalse(actual);
+	}
+
+	// Simple scenarios
+	@Test
+	public void creating_account_in_empty_bank_is_valid() {
+		String command = "create savings 12345678 1.2";
+		boolean actual = createCommandValidator.validate(command);
+
+		assertTrue(actual);
+	}
+
+	@Test
+	public void creating_account_with_unique_id_is_valid() {
+		String command = "create savings 12345678 1.2";
+		Account otherAccount = new SavingsAccount(1.5);
+		bank.addAccount("11111111", otherAccount);
+		boolean actual = createCommandValidator.validate(command);
+
+		assertTrue(actual);
+	}
+
+	@Test
+	public void creating_account_with_same_id_as_another_account_is_invalid() {
+		String command = "create savings 12345678 1.2";
+		Account otherAccount = new SavingsAccount(1.5);
+		bank.addAccount("12345678", otherAccount);
+		boolean actual = createCommandValidator.validate(command);
+
+		assertFalse(actual);
+
 	}
 
 }

@@ -24,7 +24,7 @@ public class CommandValidatorTest {
 	public void action_is_parsed_correctly() {
 		String command = "create savings 12345678 0.2";
 		commandValidator.parse(command);
-		String actual = commandValidator.getAction();
+		String actual = commandValidator.getArgument1();
 
 		assertEquals("create", actual);
 

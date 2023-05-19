@@ -1,4 +1,5 @@
 public class CommandValidator {
+	protected Bank bank;
 	protected String[] command;
 	protected String argument1;
 	protected String argument2;
@@ -46,14 +47,14 @@ public class CommandValidator {
 		return true;
 	}
 
-	public String getAction() {
+	public String getArgument1() {
 		return argument1;
 	}
 
 	private boolean delegate(String commandStr) {
 		switch (argument1.toLowerCase()) {
 		case "create":
-			CreateCommandValidator createCommandValidator = new CreateCommandValidator();
+			CreateCommandValidator createCommandValidator = new CreateCommandValidator(bank);
 			return createCommandValidator.validate(commandStr);
 		case "deposit":
 			return false;

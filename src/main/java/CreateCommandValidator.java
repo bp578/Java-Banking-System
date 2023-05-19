@@ -1,14 +1,19 @@
 public class CreateCommandValidator extends CommandValidator {
+	public CreateCommandValidator(Bank bank) {
+		super();
+		this.bank = bank;
+	}
+
 	// All tests on each part of the command must pass for the whole command to pass
 	@Override
 	public boolean validate(String commandStr) {
 		parse(commandStr);
 		if (command.length == 4) {
 			return actionIsValid(argument1) && accountTypeIsValid(argument2) && accountIdIsValid(argument3)
-					&& APRisValid(argument4);
+					&& APRisValid(argument4) && accountIdIsUnique(argument3);
 		} else if (command.length == 5) {
 			return actionIsValid(argument1) && accountTypeIsValid(argument2) && accountIdIsValid(argument3)
-					&& APRisValid(argument4) && balanceIsValid(argument5);
+					&& APRisValid(argument4) && balanceIsValid(argument5) && accountIdIsUnique(argument3);
 		} else {
 			return false;
 		}
@@ -47,6 +52,10 @@ public class CreateCommandValidator extends CommandValidator {
 		} catch (NumberFormatException e) {
 			return false;
 		}
+	}
+
+	private boolean accountIdIsUnique(String accountId) {
+		return bank.retrieveAccount(accountId) == null;
 	}
 
 }
