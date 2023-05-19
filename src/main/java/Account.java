@@ -1,4 +1,5 @@
 public abstract class Account {
+	protected String type;
 	private double balance;
 	private double APR;
 
@@ -32,5 +33,9 @@ public abstract class Account {
 
 	public double getAPR() {
 		return APR;
+	}
+
+	public String getType() {
+		return type;
 	}
 }

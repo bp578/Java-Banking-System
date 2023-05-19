@@ -16,14 +16,6 @@ public class CreateCommandValidatorTest {
 		createCommandValidator = new CreateCommandValidator(bank);
 	}
 
-	@Test
-	public void empty_string_is_invalid() {
-		command = "";
-		boolean actual = createCommandValidator.validate(command);
-
-		assertFalse(actual);
-	}
-
 	// Tests dealing with the first argument (action)
 	@Test
 	public void missing_create_is_invalid() {

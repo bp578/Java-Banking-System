@@ -1,7 +1,6 @@
 public class CreateCommandValidator extends CommandValidator {
 	public CreateCommandValidator(Bank bank) {
-		super();
-		this.bank = bank;
+		super(bank);
 	}
 
 	// All tests on each part of the command must pass for the whole command to pass
@@ -9,19 +8,15 @@ public class CreateCommandValidator extends CommandValidator {
 	public boolean validate(String commandStr) {
 		parse(commandStr);
 		if (command.length == 4) {
-			return actionIsValid(argument1) && accountTypeIsValid(argument2) && accountIdIsValid(argument3)
+			return actionIsValid(argument1, "create") && accountTypeIsValid(argument2) && accountIdIsValid(argument3)
 					&& APRisValid(argument4) && accountIdIsUnique(argument3);
 		} else if (command.length == 5) {
-			return actionIsValid(argument1) && accountTypeIsValid(argument2) && accountIdIsValid(argument3)
+			return actionIsValid(argument1, "create") && accountTypeIsValid(argument2) && accountIdIsValid(argument3)
 					&& APRisValid(argument4) && balanceIsValid(argument5) && accountIdIsUnique(argument3);
 		} else {
 			return false;
 		}
 
-	}
-
-	private boolean actionIsValid(String action) {
-		return action.equalsIgnoreCase("create");
 	}
 
 	private boolean accountTypeIsValid(String accountType) {

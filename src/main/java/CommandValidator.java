@@ -7,6 +7,10 @@ public class CommandValidator {
 	protected String argument4;
 	protected String argument5;
 
+	CommandValidator(Bank bank) {
+		this.bank = bank;
+	}
+
 	public boolean validate(String commandStr) {
 		parse(commandStr);
 		if (argument1 != null) {
@@ -16,7 +20,7 @@ public class CommandValidator {
 		}
 	}
 
-	public boolean parse(String commandStr) {
+	public void parse(String commandStr) {
 		this.command = commandStr.split(" ");
 		switch (command.length) {
 		case 2:
@@ -41,10 +45,7 @@ public class CommandValidator {
 			this.argument4 = command[3];
 			this.argument5 = command[4];
 			break;
-		default:
-			return false;
 		}
-		return true;
 	}
 
 	public String getArgument1() {
@@ -61,6 +62,10 @@ public class CommandValidator {
 		default:
 			return false;
 		}
+	}
+
+	protected boolean actionIsValid(String actualAction, String expectedAction) {
+		return actualAction.equalsIgnoreCase(expectedAction);
 	}
 
 	protected boolean accountIdIsValid(String accountId) {
