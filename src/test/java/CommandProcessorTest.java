@@ -71,10 +71,17 @@ public class CommandProcessorTest {
 
 	@Test
 	public void existing_account_balance_increases_by_amount_deposited() {
-		bank.addAccount("12345678", new CheckingAccount(2.5));
-		bank.deposit("12345678", 1000);
+		Account account = new CheckingAccount(2.5);
+		Double balanceBefore = 1000.0;
+		bank.addAccount("12345678", account);
+		bank.deposit("12345678", balanceBefore);
+
 		command = "deposit 12345678 100";
 		commandProcessor.run(command);
+		Double balanceAfter = account.getBalance();
+		Double actualDifference = balanceAfter - balanceBefore;
+
+		assertEquals(100, actualDifference);
 
 	}
 
