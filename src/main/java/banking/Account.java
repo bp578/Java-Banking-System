@@ -1,3 +1,5 @@
+package banking;
+
 public abstract class Account {
 	protected String type;
 	private double balance;

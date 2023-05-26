@@ -1,3 +1,5 @@
+package banking;
+
 public class CommandValidator {
 	protected Bank bank;
 	protected String[] command;
