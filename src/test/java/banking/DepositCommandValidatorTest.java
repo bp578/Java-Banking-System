@@ -137,12 +137,30 @@ public class DepositCommandValidatorTest {
 	}
 
 	@Test
+	public void can_deposit_2500_into_savings_account() {
+		bank.addAccount("12345678", savingsAccount);
+		command = "deposit 12345678 2500";
+		boolean actual = depositCommandValidator.validate(command);
+
+		assertTrue(actual);
+	}
+
+	@Test
 	public void cannot_deposit_over_1000_into_checking_account() {
 		bank.addAccount("12345678", checkingAccount);
 		command = "deposit 12345678 1001";
 		boolean actual = depositCommandValidator.validate(command);
 
 		assertFalse(actual);
+	}
+
+	@Test
+	public void can_deposit_1000_into_checking_account() {
+		bank.addAccount("12345678", checkingAccount);
+		command = "deposit 12345678 1000";
+		boolean actual = depositCommandValidator.validate(command);
+
+		assertTrue(actual);
 	}
 
 	@Test
