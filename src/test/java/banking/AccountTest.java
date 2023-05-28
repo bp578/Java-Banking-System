@@ -81,4 +81,13 @@ public class AccountTest {
 		assertEquals(0, actual);
 	}
 
+	@Test
+	public void withdrawing_more_than_account_balance_reduces_balance_to_zero() {
+		savingsAccount.deposit(MONEY_TO_DEPOSIT);
+		savingsAccount.withdraw(MONEY_TO_DEPOSIT + 1);
+		double actual = savingsAccount.getBalance();
+
+		assertEquals(0, actual);
+	}
+
 }
