@@ -4,6 +4,7 @@ public abstract class Account {
 	protected String type;
 	private double balance;
 	private double APR;
+	private int age;
 
 	// Constructor for Checking and Savings
 	public Account(double APR) {
@@ -33,11 +34,19 @@ public abstract class Account {
 
 	}
 
+	public void passTime(int months) {
+		age += months;
+	}
+
 	public double getAPR() {
 		return APR;
 	}
 
 	public String getType() {
 		return type;
+	}
+
+	public int getAge() {
+		return age;
 	}
 }
