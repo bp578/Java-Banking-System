@@ -1,9 +1,9 @@
 package banking;
 
 public abstract class Account {
+	private final double APR;
 	protected String type;
 	private double balance;
-	private double APR;
 	private int age;
 
 	// Constructor for Checking and Savings
@@ -36,6 +36,9 @@ public abstract class Account {
 
 	public void passTime(int months) {
 		age += months;
+		for (int i = 0; i < months; i++) {
+			monthlyAprCalculation();
+		}
 	}
 
 	public double getAPR() {
@@ -48,5 +51,13 @@ public abstract class Account {
 
 	public int getAge() {
 		return age;
+	}
+
+	public void monthlyAprCalculation() {
+		double interestRate = (APR / 100) / 12;
+		double interestEarned = balance * interestRate;
+		interestEarned = (double) Math.round(interestEarned * 100) / 100;
+
+		balance += interestEarned;
 	}
 }

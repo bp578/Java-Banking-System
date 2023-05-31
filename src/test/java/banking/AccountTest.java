@@ -9,7 +9,7 @@ import org.junit.jupiter.api.Test;
 public class AccountTest {
 	public static final int MONEY_TO_DEPOSIT = 100;
 	public static final int MONEY_TO_WITHDRAW = 25;
-	public static final double APR = 2.5;
+	public static final double APR = 3;
 	Account savingsAccount;
 
 	@BeforeEach
@@ -23,6 +23,7 @@ public class AccountTest {
 		assertEquals(APR, actual);
 	}
 
+	// Testing deposit
 	@Test
 	public void balance_increases_by_amount_deposited() {
 		double balanceBefore = savingsAccount.getBalance();
@@ -47,6 +48,7 @@ public class AccountTest {
 		assertEquals(MONEY_TO_DEPOSIT * 2, actual);
 	}
 
+	// Testing withdraw
 	@Test
 	public void balance_decreases_by_amount_withdrawn() {
 		savingsAccount.deposit(MONEY_TO_DEPOSIT);
@@ -90,4 +92,41 @@ public class AccountTest {
 		assertEquals(0, actual);
 	}
 
+	// Testing pass time
+	@Test
+	public void age_starts_at_0() {
+		int actual = savingsAccount.getAge();
+
+		assertEquals(0, actual);
+
+	}
+
+	@Test
+	public void age_increases_by_months_passed() {
+		savingsAccount.passTime(1);
+		int actual = savingsAccount.getAge();
+
+		assertEquals(1, actual);
+
+	}
+
+	@Test
+	public void APR_is_calculated_properly_after_one_month() {
+		savingsAccount.deposit(1000);
+		savingsAccount.passTime(1);
+		double actual = savingsAccount.getBalance();
+
+		assertEquals(1002.5, actual);
+
+	}
+
+	@Test
+	public void APR_is_calculated_properly_after_multiple_months() {
+		savingsAccount.deposit(1000);
+		savingsAccount.passTime(3);
+		double actual = savingsAccount.getBalance();
+
+		assertEquals(1007.52, actual);
+
+	}
 }
