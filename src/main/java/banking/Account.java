@@ -5,6 +5,7 @@ public abstract class Account {
 	protected String type;
 	protected double balance;
 	private int age;
+	private boolean withdrawMadeThisMonth = false;
 
 	// Constructor for Checking and Savings
 	public Account(double APR) {
@@ -37,6 +38,7 @@ public abstract class Account {
 	// To be used when passing months on an individual account
 	public void passTime(int months) {
 		age += months;
+		withdrawMadeThisMonth = false;
 		for (int i = 0; i < months; i++) {
 			monthlyAprCalculation();
 		}
@@ -65,5 +67,13 @@ public abstract class Account {
 		interestEarned = (double) Math.round(interestEarned * 100) / 100;
 
 		balance += interestEarned;
+	}
+
+	public boolean wasWithdrawnThisMonth() {
+		return withdrawMadeThisMonth;
+	}
+
+	public void setWithdrawMadeThisMonth(boolean b) {
+		withdrawMadeThisMonth = b;
 	}
 }

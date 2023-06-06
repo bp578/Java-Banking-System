@@ -29,6 +29,7 @@ public class Bank {
 
 	public void withdraw(String accountID, double moneyToWithdraw) {
 		this.retrieveAccount(accountID).withdraw(moneyToWithdraw);
+		this.retrieveAccount(accountID).setWithdrawMadeThisMonth(true);
 	}
 
 	public void passTime(int months) {
@@ -39,6 +40,7 @@ public class Bank {
 				Account account = (Account) pair.getValue();
 
 				account.incrementAge();
+				account.setWithdrawMadeThisMonth(false);
 				if (account.getBalance() == 0) {
 					it.remove();
 				} else if (account.getBalance() < 100) {
