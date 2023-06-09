@@ -92,6 +92,37 @@ public class AccountTest {
 		assertEquals(0, actual);
 	}
 
+	@Test
+	public void withdraw_returns_amount_withdrawn_if_amount_withdrawn_is_less_than_account_balance() {
+		savingsAccount.deposit(1000);
+		double actual = savingsAccount.withdraw(50);
+
+		assertEquals(50, actual);
+	}
+
+	@Test
+	public void withdraw_returns_balance_if_amount_withdrawn_is_more_than_account_balance() {
+		savingsAccount.deposit(1000);
+		double actual = savingsAccount.withdraw(9999);
+
+		assertEquals(1000, actual);
+	}
+
+	@Test
+	public void withdraw_returns_balance_if_amount_withdrawn_is_equal_to_account_balance() {
+		savingsAccount.deposit(1000);
+		double actual = savingsAccount.withdraw(1000);
+
+		assertEquals(1000, actual);
+	}
+
+	@Test
+	public void withdraws_made_this_month_initially_starts_at_zero() {
+		int actual = savingsAccount.getWithdrawsMadeThisMonth();
+
+		assertEquals(0, actual);
+	}
+
 	// Testing pass time
 	@Test
 	public void age_starts_at_0() {
