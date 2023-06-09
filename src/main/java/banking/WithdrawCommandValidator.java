@@ -24,12 +24,12 @@ public class WithdrawCommandValidator extends CommandValidator {
 			switch (type) {
 			case "savings":
 				if (account.getWithdrawsMadeThisMonth() < account.getMaximumWithdrawalsPerMonth()) {
-					return amount >= 0 && amount <= 1000;
+					return amount >= 0 && amount <= account.maximumWithdrawalAmount;
 				} else {
 					return false;
 				}
 			case "checking":
-				return amount >= 0 && amount <= 400;
+				return amount >= 0 && amount <= account.maximumWithdrawalAmount;
 			case "cd":
 				return (account.getAge() >= 12) && (amount >= account.getBalance());
 			default:

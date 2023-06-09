@@ -51,4 +51,10 @@ public class Bank {
 		}
 	}
 
+	public void transfer(String fromID, String toID, double moneyToTransfer) {
+		Account fromAccount = this.retrieveAccount(fromID);
+		Account toAccount = this.retrieveAccount(toID);
+
+		toAccount.deposit(fromAccount.withdraw(moneyToTransfer));
+	}
 }

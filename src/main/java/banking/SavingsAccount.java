@@ -6,6 +6,7 @@ public class SavingsAccount extends Account {
 		super(APR);
 		type = "savings";
 		maximumWithdrawalsPerMonth = 1;
+		maximumWithdrawalAmount = 1000;
 	}
 
 }

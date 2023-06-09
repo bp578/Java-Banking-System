@@ -5,6 +5,7 @@ public abstract class Account {
 	protected String type;
 	protected double balance;
 	protected int maximumWithdrawalsPerMonth;
+	protected double maximumWithdrawalAmount;
 	private int age;
 	private int withdrawsMadeThisMonth = 0;
 

@@ -12,6 +12,7 @@ public class BankTest {
 	public static final String ACCOUNT_ID_2 = "87654321";
 	public static final double MONEY_TO_DEPOSIT = 1000;
 	public static final double MONEY_TO_WITHDRAW = 50;
+	public static final double MONEY_TO_TRANSFER = 25;
 	public static final double DEFAULT_CD_BALANCE = 1000;
 	public static final int MONTHS_TO_PASS = 5;
 	Bank bank;
@@ -238,6 +239,51 @@ public class BankTest {
 		double actual = bank.retrieveAccount(ACCOUNT_ID_1).getBalance();
 
 		assertEquals(0, actual);
+	}
+
+	// Testing transfer
+	@Test
+	public void from_account_balance_decreases_by_amount_transferred() {
+		bank.addAccount(ACCOUNT_ID_1, new CheckingAccount(APR));
+		bank.addAccount(ACCOUNT_ID_2, new CheckingAccount(APR));
+		bank.deposit(ACCOUNT_ID_1, MONEY_TO_DEPOSIT);
+		bank.transfer(ACCOUNT_ID_1, ACCOUNT_ID_2, MONEY_TO_TRANSFER);
+
+		double actual = bank.retrieveAccount(ACCOUNT_ID_1).getBalance();
+		assertEquals(MONEY_TO_DEPOSIT - MONEY_TO_TRANSFER, actual);
+	}
+
+	@Test
+	public void to_account_balance_increases_by_amount_transferred() {
+		bank.addAccount(ACCOUNT_ID_1, new CheckingAccount(APR));
+		bank.addAccount(ACCOUNT_ID_2, new CheckingAccount(APR));
+		bank.deposit(ACCOUNT_ID_1, MONEY_TO_DEPOSIT);
+		bank.transfer(ACCOUNT_ID_1, ACCOUNT_ID_2, MONEY_TO_TRANSFER);
+
+		double actual = bank.retrieveAccount(ACCOUNT_ID_2).getBalance();
+		assertEquals(MONEY_TO_TRANSFER, actual);
+	}
+
+	@Test
+	public void from_account_balance_cannot_be_negative_after_transfer() {
+		bank.addAccount(ACCOUNT_ID_1, new CheckingAccount(APR));
+		bank.addAccount(ACCOUNT_ID_2, new CheckingAccount(APR));
+		bank.deposit(ACCOUNT_ID_1, 1);
+		bank.transfer(ACCOUNT_ID_1, ACCOUNT_ID_2, 9999);
+
+		double actual = bank.retrieveAccount(ACCOUNT_ID_1).getBalance();
+		assertEquals(0, actual);
+	}
+
+	@Test
+	public void to_account_balance_increases_by_amount_actually_withdrawn() {
+		bank.addAccount(ACCOUNT_ID_1, new CheckingAccount(APR));
+		bank.addAccount(ACCOUNT_ID_2, new CheckingAccount(APR));
+		bank.deposit(ACCOUNT_ID_1, 1);
+		bank.transfer(ACCOUNT_ID_1, ACCOUNT_ID_2, 9999);
+
+		double actual = bank.retrieveAccount(ACCOUNT_ID_2).getBalance();
+		assertEquals(1, actual);
 	}
 
 }

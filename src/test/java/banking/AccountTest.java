@@ -123,6 +123,14 @@ public class AccountTest {
 		assertEquals(0, actual);
 	}
 
+	@Test
+	public void withdraws_made_this_month_increases_by_amount_provided() {
+		savingsAccount.increaseWithdrawalsMadeThisMonth(5);
+		int actual = savingsAccount.getWithdrawsMadeThisMonth();
+
+		assertEquals(5, actual);
+	}
+
 	// Testing pass time
 	@Test
 	public void age_starts_at_0() {
