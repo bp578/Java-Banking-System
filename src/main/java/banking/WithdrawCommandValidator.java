@@ -20,19 +20,21 @@ public class WithdrawCommandValidator extends CommandValidator {
 		try {
 			double amount = Double.parseDouble(amountStr);
 			String type = getAccountType(argument2);
-			if (type.equals("savings")) {
-				if (!bank.retrieveAccount(argument2).wasWithdrawnThisMonth()) {
+			Account account = bank.retrieveAccount(argument2);
+			switch (type) {
+			case "savings":
+				if (account.getWithdrawsMadeThisMonth() < account.getMaximumWithdrawalsPerMonth()) {
 					return amount >= 0 && amount <= 1000;
 				} else {
 					return false;
 				}
-
-			} else if (type.equals("checking")) {
+			case "checking":
 				return amount >= 0 && amount <= 400;
-			} else {
+			case "cd":
+				return (account.getAge() >= 12) && (amount >= account.getBalance());
+			default:
 				return false;
 			}
-
 		} catch (NumberFormatException e) {
 			return false;
 		}

@@ -56,6 +56,16 @@ public class WithdrawCommandValidatorTest {
 		assertTrue(actual);
 	}
 
+	@Test
+	public void can_withdraw_more_than_account_balance() {
+		bank.addAccount("12345678", new SavingsAccount(2.5));
+		bank.deposit("12345678", 1);
+		command = "withdraw 12345678 100";
+		boolean actual = withdrawCommandValidator.validate(command);
+
+		assertTrue(actual);
+	}
+
 	// Tests dealing with the second argument (account ID)
 	@Test
 	public void missing_ID_is_invalid() {
@@ -139,6 +149,7 @@ public class WithdrawCommandValidatorTest {
 		assertTrue(actual);
 	}
 
+	// Savings account testing
 	@Test
 	public void cannot_withdraw_more_than_1000_from_savings_account() {
 		bank.addAccount("12345678", new SavingsAccount(2.5));
@@ -151,15 +162,25 @@ public class WithdrawCommandValidatorTest {
 	@Test
 	public void can_withdraw_exactly_1000_from_savings_account() {
 		bank.addAccount("12345678", new SavingsAccount(2.5));
-		command = "withdraw 12345678 1000.1";
+		command = "withdraw 12345678 1000";
 		boolean actual = withdrawCommandValidator.validate(command);
 
-		assertFalse(actual);
+		assertTrue(actual);
+	}
+
+	@Test
+	public void can_withdraw_less_than_1000_from_savings_account() {
+		bank.addAccount("12345678", new SavingsAccount(2.5));
+		command = "withdraw 12345678 999.99";
+		boolean actual = withdrawCommandValidator.validate(command);
+
+		assertTrue(actual);
 	}
 
 	@Test
 	public void cannot_withdraw_from_savings_account_more_than_once_per_month() {
 		bank.addAccount("12345678", new SavingsAccount(2.5));
+		bank.deposit("12345678", 1000);
 		bank.withdraw("12345678", 100);
 		command = "withdraw 12345678 500";
 		boolean actual = withdrawCommandValidator.validate(command);
@@ -194,13 +215,149 @@ public class WithdrawCommandValidatorTest {
 	@Test
 	public void cannot_withdraw_twice_from_new_savings_account_after_time_has_already_passed() {
 		bank.passTime(1);
-		bank.addAccount("12345678", new SavingsAccount(2.5));
+		bank.addAccount("12345678", new SavingsAccount(0));
 		bank.deposit("12345678", 500);
 		bank.withdraw("12345678", 100);
 		command = "withdraw 12345678 500";
 		boolean actual = withdrawCommandValidator.validate(command);
 
 		assertFalse(actual);
+	}
+
+	@Test
+	public void can_still_withdraw_after_minimum_balance_fee() {
+		bank.addAccount("12345678", new SavingsAccount(0));
+		bank.deposit("12345678", 50);
+		bank.passTime(1);
+		command = "withdraw 12345678 100";
+
+		boolean actual = withdrawCommandValidator.validate(command);
+
+		assertTrue(actual);
+	}
+
+	// Checking account testing
+	@Test
+	public void cannot_withdraw_more_than_400_from_checking_account() {
+		bank.addAccount("12345678", new CheckingAccount(0));
+		command = "withdraw 12345678 400.01";
+		boolean actual = withdrawCommandValidator.validate(command);
+
+		assertFalse(actual);
+
+	}
+
+	@Test
+	public void can_withdraw_exactly_400_from_checking_account() {
+		bank.addAccount("12345678", new CheckingAccount(0));
+		command = "withdraw 12345678 400";
+		boolean actual = withdrawCommandValidator.validate(command);
+
+		assertTrue(actual);
+	}
+
+	@Test
+	public void can_withdraw_less_than_400_from_checking_account() {
+		bank.addAccount("12345678", new CheckingAccount(0));
+		command = "withdraw 12345678 399.99";
+		boolean actual = withdrawCommandValidator.validate(command);
+
+		assertTrue(actual);
+	}
+
+	@Test
+	public void can_withdraw_multiple_times_per_month_from_checking_account() {
+		bank.addAccount("12345678", new CheckingAccount(0));
+		bank.deposit("12345678", 1000);
+		bank.withdraw("12345678", 100);
+		bank.withdraw("12345678", 100);
+		bank.withdraw("12345678", 100);
+		command = "withdraw 12345678 100";
+
+		boolean actual = withdrawCommandValidator.validate(command);
+
+		assertTrue(actual);
+	}
+
+	// CD account testing
+	@Test
+	public void cannot_withdraw_from_new_cd_account() {
+		bank.addAccount("12345678", new CDAccount(0, 1000));
+		command = "withdraw 12345678 1000";
+		boolean actual = withdrawCommandValidator.validate(command);
+
+		assertFalse(actual);
+	}
+
+	@Test
+	public void cannot_withdraw_from_cd_account_after_less_than_12_months() {
+		bank.addAccount("12345678", new CDAccount(0, 1000));
+		bank.passTime(11);
+		command = "withdraw 12345678 1000";
+		boolean actual = withdrawCommandValidator.validate(command);
+
+		assertFalse(actual);
+	}
+
+	@Test
+	public void can_withdraw_from_cd_account_after_exactly_12_months() {
+		bank.addAccount("12345678", new CDAccount(0, 1000));
+		bank.passTime(12);
+		command = "withdraw 12345678 1000";
+		boolean actual = withdrawCommandValidator.validate(command);
+
+		assertTrue(actual);
+	}
+
+	@Test
+	public void can_withdraw_from_cd_account_after_more_than_12_months() {
+		bank.addAccount("12345678", new CDAccount(0, 1000));
+		bank.passTime(13);
+		command = "withdraw 12345678 1000";
+		boolean actual = withdrawCommandValidator.validate(command);
+
+		assertTrue(actual);
+	}
+
+	@Test
+	public void amount_withdrawn_cannot_be_less_than_balance() {
+		bank.addAccount("12345678", new CDAccount(0, 1000));
+		bank.passTime(12);
+		command = "withdraw 12345678 999.99";
+		boolean actual = withdrawCommandValidator.validate(command);
+
+		assertFalse(actual);
+	}
+
+	@Test
+	public void amount_withdrawn_can_be_equal_to_balance() {
+		bank.addAccount("12345678", new CDAccount(0, 1000));
+		bank.passTime(12);
+		command = "withdraw 12345678 1000";
+		boolean actual = withdrawCommandValidator.validate(command);
+
+		assertTrue(actual);
+	}
+
+	@Test
+	public void amount_withdrawn_can_be_greater_than_balance() {
+		bank.addAccount("12345678", new CDAccount(0, 1000));
+		bank.passTime(12);
+		command = "withdraw 12345678 1001";
+		boolean actual = withdrawCommandValidator.validate(command);
+
+		assertTrue(actual);
+	}
+
+	@Test
+	public void can_withdraw_from_cd_account_more_than_once() {
+		bank.addAccount("12345678", new CDAccount(0, 1000));
+		bank.passTime(12);
+		bank.withdraw("12345678", 1000);
+		command = "withdraw 12345678 1000";
+		boolean actual = withdrawCommandValidator.validate(command);
+
+		assertTrue(actual);
 	}
 
 }

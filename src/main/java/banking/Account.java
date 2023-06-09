@@ -4,8 +4,9 @@ public abstract class Account {
 	protected final double APR;
 	protected String type;
 	protected double balance;
+	protected int maximumWithdrawalsPerMonth;
 	private int age;
-	private boolean withdrawMadeThisMonth = false;
+	private int withdrawsMadeThisMonth = 0;
 
 	// Constructor for Checking and Savings
 	public Account(double APR) {
@@ -26,19 +27,23 @@ public abstract class Account {
 		balance += moneyToDeposit;
 	}
 
-	public void withdraw(double moneyToWithdraw) {
+	public double withdraw(double moneyToWithdraw) {
+		double balanceToReturn;
 		if (moneyToWithdraw > balance) {
+			balanceToReturn = balance;
 			balance = 0;
 		} else {
+			balanceToReturn = moneyToWithdraw;
 			balance -= moneyToWithdraw;
 		}
+		return balanceToReturn;
 
 	}
 
 	// To be used when passing months on an individual account
 	public void passTime(int months) {
 		age += months;
-		withdrawMadeThisMonth = false;
+		withdrawsMadeThisMonth = 0;
 		for (int i = 0; i < months; i++) {
 			monthlyAprCalculation();
 		}
@@ -69,11 +74,19 @@ public abstract class Account {
 		balance += interestEarned;
 	}
 
-	public boolean wasWithdrawnThisMonth() {
-		return withdrawMadeThisMonth;
+	public int getWithdrawsMadeThisMonth() {
+		return withdrawsMadeThisMonth;
 	}
 
-	public void setWithdrawMadeThisMonth(boolean b) {
-		withdrawMadeThisMonth = b;
+	public void resetWithdrawMadeThisMonth() {
+		withdrawsMadeThisMonth = 0;
+	}
+
+	public int getMaximumWithdrawalsPerMonth() {
+		return maximumWithdrawalsPerMonth;
+	}
+
+	public void increaseWithdrawalsMadeThisMonth(int val) {
+		withdrawsMadeThisMonth += val;
 	}
 }

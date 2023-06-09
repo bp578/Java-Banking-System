@@ -5,7 +5,7 @@ import java.util.Iterator;
 import java.util.Map;
 
 public class Bank {
-	private Map<String, Account> accounts;
+	private final Map<String, Account> accounts;
 
 	Bank() {
 		accounts = new HashMap<>();
@@ -29,18 +29,18 @@ public class Bank {
 
 	public void withdraw(String accountID, double moneyToWithdraw) {
 		this.retrieveAccount(accountID).withdraw(moneyToWithdraw);
-		this.retrieveAccount(accountID).setWithdrawMadeThisMonth(true);
+		this.retrieveAccount(accountID).increaseWithdrawalsMadeThisMonth(1);
 	}
 
 	public void passTime(int months) {
 		for (int i = 0; i < months; i++) {
-			Iterator it = accounts.entrySet().iterator();
+			Iterator<Map.Entry<String, Account>> it = accounts.entrySet().iterator();
 			while (it.hasNext()) {
 				Map.Entry pair = (Map.Entry) it.next();
 				Account account = (Account) pair.getValue();
 
 				account.incrementAge();
-				account.setWithdrawMadeThisMonth(false);
+				account.resetWithdrawMadeThisMonth();
 				if (account.getBalance() == 0) {
 					it.remove();
 				} else if (account.getBalance() < 100) {
