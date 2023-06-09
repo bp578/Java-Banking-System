@@ -56,16 +56,6 @@ public class WithdrawCommandValidatorTest {
 		assertTrue(actual);
 	}
 
-	@Test
-	public void can_withdraw_more_than_account_balance() {
-		bank.addAccount("12345678", new SavingsAccount(2.5));
-		bank.deposit("12345678", 1);
-		command = "withdraw 12345678 100";
-		boolean actual = withdrawCommandValidator.validate(command);
-
-		assertTrue(actual);
-	}
-
 	// Tests dealing with the second argument (account ID)
 	@Test
 	public void missing_ID_is_invalid() {
@@ -144,6 +134,16 @@ public class WithdrawCommandValidatorTest {
 	public void amount_can_be_zero() {
 		bank.addAccount("12345678", new SavingsAccount(2.5));
 		command = "withdraw 12345678 0";
+		boolean actual = withdrawCommandValidator.validate(command);
+
+		assertTrue(actual);
+	}
+
+	@Test
+	public void can_withdraw_more_than_account_balance() {
+		bank.addAccount("12345678", new SavingsAccount(2.5));
+		bank.deposit("12345678", 1);
+		command = "withdraw 12345678 100";
 		boolean actual = withdrawCommandValidator.validate(command);
 
 		assertTrue(actual);
