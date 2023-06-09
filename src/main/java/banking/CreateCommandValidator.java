@@ -11,10 +11,10 @@ public class CreateCommandValidator extends CommandValidator {
 		parse(commandStr);
 		if (command.length == 4) {
 			return actionIsValid(argument1, "create") && accountTypeIsValid(argument2) && accountIdIsValid(argument3)
-					&& APRisValid(argument4) && accountIdIsUnique(argument3);
+					&& APRisValid(argument4) && !accountExists(argument3);
 		} else if (command.length == 5) {
 			return actionIsValid(argument1, "create") && accountTypeIsValid(argument2) && accountIdIsValid(argument3)
-					&& APRisValid(argument4) && balanceIsValid(argument5) && accountIdIsUnique(argument3);
+					&& APRisValid(argument4) && balanceIsValid(argument5) && !accountExists(argument3);
 		} else {
 			return false;
 		}
@@ -49,10 +49,6 @@ public class CreateCommandValidator extends CommandValidator {
 		} catch (NumberFormatException e) {
 			return false;
 		}
-	}
-
-	private boolean accountIdIsUnique(String accountId) {
-		return bank.retrieveAccount(accountId) == null;
 	}
 
 }

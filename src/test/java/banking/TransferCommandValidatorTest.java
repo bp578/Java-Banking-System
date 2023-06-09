@@ -50,4 +50,6 @@ public class TransferCommandValidatorTest {
 
 		assertTrue(actual);
 	}
+
+	// Tests dealing with second argument (to ID)
 }

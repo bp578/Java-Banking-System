@@ -66,6 +66,7 @@ public class CommandValidator {
 		}
 	}
 
+	// Common functions used by child validators
 	protected boolean actionIsValid(String actualAction, String expectedAction) {
 		return actualAction.equalsIgnoreCase(expectedAction);
 	}
@@ -81,8 +82,11 @@ public class CommandValidator {
 		} else {
 			return false;
 		}
-
 		return true;
+	}
+
+	protected boolean accountExists(String accountId) {
+		return bank.retrieveAccount(accountId) != null;
 	}
 
 }

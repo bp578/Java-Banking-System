@@ -360,4 +360,32 @@ public class WithdrawCommandValidatorTest {
 		assertTrue(actual);
 	}
 
+	// Simple scenarios
+	@Test
+	public void withdrawing_from_empty_bank_is_invalid() {
+		command = "withdraw 12345678 1000";
+		boolean actual = withdrawCommandValidator.validate(command);
+
+		assertFalse(actual);
+	}
+
+	@Test
+	public void withdrawing_using_correct_id_is_valid() {
+		bank.addAccount("12345678", new SavingsAccount(0));
+		command = "withdraw 12345678 1000";
+		boolean actual = withdrawCommandValidator.validate(command);
+
+		assertTrue(actual);
+
+	}
+
+	@Test
+	public void withdrawing_using_incorrect_id_is_invalid() {
+		bank.addAccount("12345678", new SavingsAccount(0));
+		command = "withdraw 00000000 1000";
+		boolean actual = withdrawCommandValidator.validate(command);
+
+		assertFalse(actual);
+	}
+
 }

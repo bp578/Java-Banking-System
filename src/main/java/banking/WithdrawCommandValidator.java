@@ -9,7 +9,8 @@ public class WithdrawCommandValidator extends CommandValidator {
 	public boolean validate(String commandStr) {
 		parse(commandStr);
 		if (command.length == 3) {
-			return actionIsValid(argument1, "withdraw") && accountIdIsValid(argument2) && amountIsValid(argument3);
+			return actionIsValid(argument1, "withdraw") && accountIdIsValid(argument2) && accountExists(argument2)
+					&& amountIsValid(argument3);
 		} else {
 			return false;
 		}

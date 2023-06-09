@@ -33,10 +33,6 @@ public class DepositCommandValidator extends CommandValidator {
 		}
 	}
 
-	private boolean accountExists(String accountId) {
-		return bank.retrieveAccount(accountId) != null;
-	}
-
 	private String getAccountType(String accountId) {
 		return bank.retrieveAccount(accountId).getType();
 	}
