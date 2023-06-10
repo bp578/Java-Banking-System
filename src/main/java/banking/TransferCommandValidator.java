@@ -8,6 +8,17 @@ public class TransferCommandValidator extends CommandValidator {
 	@Override
 	public boolean validate(String commandStr) {
 		parse(commandStr);
-		return actionIsValid(argument1, "transfer");
+		if (command.length == 4) {
+			return actionIsValid(argument1, "transfer") && withdrawalOnFromAccountIsValid(argument2, argument4);
+		} else {
+			return false;
+		}
+
+	}
+
+	private boolean withdrawalOnFromAccountIsValid(String fromAccountID, String amount) {
+		WithdrawCommandValidator validator = new WithdrawCommandValidator(bank);
+		String command = "withdraw " + fromAccountID + " " + amount;
+		return validator.validate(command);
 	}
 }
