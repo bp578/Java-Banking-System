@@ -55,6 +55,7 @@ public class Bank {
 		Account fromAccount = this.retrieveAccount(fromID);
 		Account toAccount = this.retrieveAccount(toID);
 
+		fromAccount.increaseWithdrawalsMadeThisMonth(1);
 		toAccount.deposit(fromAccount.withdraw(moneyToTransfer));
 	}
 }

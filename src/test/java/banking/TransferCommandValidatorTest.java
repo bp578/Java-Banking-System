@@ -229,11 +229,224 @@ public class TransferCommandValidatorTest {
 	@Test
 	public void cannot_transfer_from_savings_account_more_than_once_per_month() {
 		bank.addAccount("00000000", new SavingsAccount(0));
+		bank.deposit("00000000", 1000);
 		bank.addAccount("11111111", new CheckingAccount(0));
 		bank.transfer("00000000", "11111111", 100);
 		command = "transfer 00000000 11111111 100";
 		boolean actual = transferCommandValidator.validate(command);
 
+		assertFalse(actual);
+	}
+
+	@Test
+	public void cannot_transfer_from_savings_account_if_a_withdrawal_was_made_in_the_same_month() {
+		bank.addAccount("00000000", new SavingsAccount(0));
+		bank.deposit("00000000", 1000);
+		bank.addAccount("11111111", new CheckingAccount(0));
+		bank.withdraw("00000000", 100);
+		command = "transfer 00000000 11111111 100";
+		boolean actual = transferCommandValidator.validate(command);
+
+		assertFalse(actual);
+	}
+
+	@Test
+	public void can_transfer_from_savings_account_again_after_one_month() {
+		bank.addAccount("00000000", new SavingsAccount(0));
+		bank.deposit("00000000", 1000);
+		bank.addAccount("11111111", new CheckingAccount(0));
+		bank.transfer("00000000", "11111111", 100);
+		bank.passTime(1);
+		command = "transfer 00000000 11111111 100";
+		boolean actual = transferCommandValidator.validate(command);
+
+		assertTrue(actual);
+
+	}
+
+	@Test
+	public void can_transfer_from_savings_account_again_after_multiple_months() {
+		bank.addAccount("00000000", new SavingsAccount(0));
+		bank.deposit("00000000", 1000);
+		bank.addAccount("11111111", new CheckingAccount(0));
+		bank.transfer("00000000", "11111111", 100);
+		bank.passTime(2);
+		command = "transfer 00000000 11111111 100";
+		boolean actual = transferCommandValidator.validate(command);
+
+		assertTrue(actual);
+
+	}
+
+	@Test
+	public void cannot_transfer_from_savings_account_twice_if_time_passes_before_account_has_created() {
+		bank.addAccount("11111111", new CheckingAccount(0));
+		bank.deposit("11111111", 100);
+		bank.passTime(1);
+		bank.addAccount("00000000", new SavingsAccount(0));
+		bank.deposit("00000000", 1000);
+		bank.transfer("00000000", "11111111", 100);
+		command = "transfer 00000000 11111111 100";
+		boolean actual = transferCommandValidator.validate(command);
+
+		assertFalse(actual);
+	}
+
+	@Test
+	public void can_still_transfer_from_savings_account_after_minimum_balance_fee() {
+		bank.addAccount("00000000", new SavingsAccount(0));
+		bank.deposit("00000000", 50);
+		bank.addAccount("11111111", new CheckingAccount(0));
+		bank.deposit("11111111", 100);
+		bank.passTime(1);
+		command = "transfer 00000000 11111111 100";
+		boolean actual = transferCommandValidator.validate(command);
+
 		assertTrue(actual);
 	}
+
+	@Test
+	public void cannot_transfer_more_than_1000_from_savings_account() {
+		bank.addAccount("00000000", new SavingsAccount(0));
+		bank.addAccount("11111111", new CheckingAccount(0));
+		bank.deposit("11111111", 2000);
+		command = "transfer 00000000 11111111 1000.01";
+		boolean actual = transferCommandValidator.validate(command);
+
+		assertFalse(actual);
+	}
+
+	@Test
+	public void can_transfer_exactly_1000_from_savings_account() {
+		bank.addAccount("11111111", new CheckingAccount(0));
+		bank.deposit("11111111", 2000);
+		bank.addAccount("00000000", new SavingsAccount(0));
+		command = "transfer 00000000 11111111 1000";
+		boolean actual = transferCommandValidator.validate(command);
+
+		assertTrue(actual);
+	}
+
+	@Test
+	public void can_transfer_less_than_1000_from_savings_account() {
+		bank.addAccount("00000000", new SavingsAccount(0));
+		bank.addAccount("11111111", new CheckingAccount(0));
+		bank.deposit("11111111", 2000);
+		command = "transfer 00000000 11111111 999";
+		boolean actual = transferCommandValidator.validate(command);
+
+		assertTrue(actual);
+	}
+
+	@Test
+	public void cannot_transfer_more_than_400_from_checking_account() {
+		addAccounts(); // Both accounts are checking by default
+		bank.deposit("00000000", 1000);
+		command = "transfer 00000000 11111111 400.001";
+		boolean actual = transferCommandValidator.validate(command);
+
+		assertFalse(actual);
+
+	}
+
+	@Test
+	public void can_transfer_less_than_400_from_checking_account() {
+		addAccounts(); // Both accounts are checking by default
+		bank.deposit("00000000", 1000);
+		command = "transfer 00000000 11111111 399.99";
+		boolean actual = transferCommandValidator.validate(command);
+
+		assertTrue(actual);
+
+	}
+
+	@Test
+	public void can_transfer_exactly_400_from_checking_account() {
+		addAccounts(); // Both accounts are checking by default
+		bank.deposit("00000000", 1000);
+		command = "transfer 00000000 11111111 400";
+		boolean actual = transferCommandValidator.validate(command);
+
+		assertTrue(actual);
+
+	}
+
+	@Test
+	public void can_transfer_multiple_times_per_month_from_checking_account() {
+		addAccounts(); // Both accounts are checking by default
+		bank.deposit("00000000", 1000);
+		bank.transfer("00000000", "11111111", 100);
+		bank.transfer("00000000", "11111111", 100);
+		command = "transfer 00000000 11111111 400";
+		boolean actual = transferCommandValidator.validate(command);
+
+		assertTrue(actual);
+
+	}
+
+	@Test
+	public void cannot_transfer_from_cd_account_even_if_withdrawing_from_it_is_valid() {
+		WithdrawCommandValidator withdrawCommandValidator = new WithdrawCommandValidator(bank);
+		bank.addAccount("00000000", new CDAccount(0, 1000));
+		bank.addAccount("11111111", new CheckingAccount(0));
+		bank.deposit("11111111", 100);
+		bank.passTime(12);
+		String cdWithdrawalCommand = "withdraw 00000000 1000";
+		String cdTransferCommand = "transfer 00000000 11111111 1000";
+
+		assertTrue(withdrawCommandValidator.validate(cdWithdrawalCommand));
+		assertFalse(transferCommandValidator.validate(cdTransferCommand));
+	}
+
+	// Testing all deposit rules on from account
+	@Test
+	public void cannot_transfer_more_than_2500_to_savings_account() {
+		bank.addAccount("00000000", new CheckingAccount(0));
+		bank.addAccount("11111111", new SavingsAccount(0));
+		command = "transfer 00000000 11111111 2500.01";
+		boolean actual = transferCommandValidator.validate(command);
+
+		assertFalse(actual);
+	}
+
+	@Test
+	public void cannot_transfer_more_than_1000_to_checking_account() {
+		addAccounts();
+		command = "transfer 00000000 11111111 1000.01";
+		boolean actual = transferCommandValidator.validate(command);
+
+		assertFalse(actual);
+	}
+
+	// Other scenarios
+	@Test
+	public void both_accounts_can_be_savings() {
+		bank.addAccount("00000000", new SavingsAccount(0));
+		bank.deposit("00000000", 1000);
+		bank.addAccount("11111111", new SavingsAccount(0));
+		command = "transfer 00000000 11111111 100";
+		boolean actual = transferCommandValidator.validate(command);
+
+		assertTrue(actual);
+	}
+
+	@Test
+	public void both_accounts_cannot_be_CD() {
+		bank.addAccount("00000000", new CDAccount(0, 1000));
+		bank.addAccount("11111111", new CDAccount(0, 1000));
+		command = "transfer 00000000 11111111 1000";
+		boolean actual = transferCommandValidator.validate(command);
+
+		assertFalse(actual);
+	}
+
+	@Test
+	public void cannot_transfer_to_the_same_account() {
+		addAccounts();
+		command = "transfer 00000000 00000000 0";
+		boolean actual = transferCommandValidator.validate(command);
+
+		assertFalse(actual);
+	}
+
 }

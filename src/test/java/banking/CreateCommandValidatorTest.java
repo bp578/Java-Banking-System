@@ -276,4 +276,14 @@ public class CreateCommandValidatorTest {
 
 	}
 
+	@Test
+	public void can_create_account_with_same_id_as_a_previous_account_if_previous_account_closed() {
+		bank.addAccount("12345678", new CheckingAccount(0));
+		bank.passTime(1);
+		String command = "create savings 12345678 1.2";
+		boolean actual = createCommandValidator.validate(command);
+
+		assertTrue(actual);
+	}
+
 }

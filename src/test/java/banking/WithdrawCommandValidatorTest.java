@@ -230,20 +230,20 @@ public class WithdrawCommandValidatorTest {
 		bank.addAccount("12345678", new SavingsAccount(0));
 		bank.deposit("12345678", 50);
 		bank.passTime(1);
-		command = "withdraw 12345678 100";
+		command = "withdraw 12345678 10";
 		boolean actual = withdrawCommandValidator.validate(command);
 
 		assertTrue(actual);
 	}
 
 	@Test
-	public void amount_given_can_be_more_than_1000_if_amount_actually_withdrawn_is_less_than_1000() {
+	public void amount_given_cannot_be_more_than_1000_if_amount_actually_withdrawn_is_less_than_1000() {
 		bank.addAccount("12345678", new SavingsAccount(0));
 		bank.deposit("12345678", 999.99);
 		command = "withdraw 12345678 10000000000000";
 		boolean actual = withdrawCommandValidator.validate(command);
 
-		assertTrue(actual);
+		assertFalse(actual);
 	}
 
 	// Checking account testing
