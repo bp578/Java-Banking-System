@@ -63,7 +63,7 @@ public class PassTimeCommandValidatorTest {
 
 	@Test
 	public void time_cannot_be_a_double() {
-		command = "pass 5.7";
+		command = "pass 5.0";
 		boolean actual = passCommandValidator.validate(command);
 
 		assertFalse(actual);
@@ -104,6 +104,30 @@ public class PassTimeCommandValidatorTest {
 	@Test
 	public void more_than_two_arguments_is_invalid() {
 		command = "pass 1 2";
+		boolean actual = passCommandValidator.validate(command);
+
+		assertFalse(actual);
+	}
+
+	@Test
+	public void command_can_end_with_a_space() {
+		command = "pass 1 ";
+		boolean actual = passCommandValidator.validate(command);
+
+		assertTrue(actual);
+	}
+
+	@Test
+	public void command_cannot_start_with_a_space() {
+		command = " pass 1";
+		boolean actual = passCommandValidator.validate(command);
+
+		assertFalse(actual);
+	}
+
+	@Test
+	public void command_cannot_have_extra_spaces_in_the_middle() {
+		command = "pass  1";
 		boolean actual = passCommandValidator.validate(command);
 
 		assertFalse(actual);

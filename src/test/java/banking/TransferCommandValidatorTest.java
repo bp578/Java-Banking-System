@@ -449,4 +449,31 @@ public class TransferCommandValidatorTest {
 		assertFalse(actual);
 	}
 
+	@Test
+	public void command_can_end_with_a_space() {
+		addAccounts();
+		command = "transfer 00000000 11111111 100 ";
+		boolean actual = transferCommandValidator.validate(command);
+
+		assertTrue(actual);
+	}
+
+	@Test
+	public void command_cannot_start_with_a_space() {
+		addAccounts();
+		command = " transfer 00000000 11111111 100";
+		boolean actual = transferCommandValidator.validate(command);
+
+		assertFalse(actual);
+	}
+
+	@Test
+	public void command_cannot_have_extra_spaces_in_the_middle() {
+		addAccounts();
+		command = " transfer  00000000   11111111  100";
+		boolean actual = transferCommandValidator.validate(command);
+
+		assertFalse(actual);
+	}
+
 }

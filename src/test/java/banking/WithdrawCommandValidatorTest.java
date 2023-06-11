@@ -399,4 +399,31 @@ public class WithdrawCommandValidatorTest {
 		assertFalse(actual);
 	}
 
+	@Test
+	public void command_can_end_with_a_space() {
+		bank.addAccount("12345678", new SavingsAccount(0));
+		command = "withdraw 12345678 1000 ";
+		boolean actual = withdrawCommandValidator.validate(command);
+
+		assertTrue(actual);
+	}
+
+	@Test
+	public void command_cannot_start_with_a_space() {
+		bank.addAccount("12345678", new SavingsAccount(0));
+		command = " withdraw 12345678 1000";
+		boolean actual = withdrawCommandValidator.validate(command);
+
+		assertFalse(actual);
+	}
+
+	@Test
+	public void command_cannot_have_extra_spaces_in_the_middle() {
+		bank.addAccount("12345678", new SavingsAccount(0));
+		command = " withdraw  12345678  1000";
+		boolean actual = withdrawCommandValidator.validate(command);
+
+		assertFalse(actual);
+	}
+
 }

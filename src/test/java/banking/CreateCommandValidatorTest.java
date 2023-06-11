@@ -286,4 +286,28 @@ public class CreateCommandValidatorTest {
 		assertTrue(actual);
 	}
 
+	@Test
+	public void command_can_end_with_a_space() {
+		String command = "create savings 12345678 1.2 ";
+		boolean actual = createCommandValidator.validate(command);
+
+		assertTrue(actual);
+	}
+
+	@Test
+	public void command_cannot_start_in_a_space() {
+		String command = " create savings 12345678 1.2";
+		boolean actual = createCommandValidator.validate(command);
+
+		assertFalse(actual);
+	}
+
+	@Test
+	public void command_cannot_have_extra_spaces_in_the_middle() {
+		String command = "create  savings  12345678  1.2";
+		boolean actual = createCommandValidator.validate(command);
+
+		assertFalse(actual);
+	}
+
 }

@@ -202,4 +202,31 @@ public class DepositCommandValidatorTest {
 
 	}
 
+	@Test
+	public void command_can_end_with_a_space() {
+		bank.addAccount("12345678", savingsAccount);
+		command = "deposit 12345678 100 ";
+		boolean actual = depositCommandValidator.validate(command);
+
+		assertTrue(actual);
+	}
+
+	@Test
+	public void command_cannot_start_with_a_space() {
+		bank.addAccount("12345678", savingsAccount);
+		command = " deposit 12345678 100";
+		boolean actual = depositCommandValidator.validate(command);
+
+		assertFalse(actual);
+	}
+
+	@Test
+	public void command_cannot_have_extra_spaces_in_the_middle() {
+		bank.addAccount("12345678", savingsAccount);
+		command = "deposit  12345678  100";
+		boolean actual = depositCommandValidator.validate(command);
+
+		assertFalse(actual);
+	}
+
 }
