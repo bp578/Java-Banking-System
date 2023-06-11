@@ -16,7 +16,7 @@ public class CommandValidator {
 	public boolean validate(String commandStr) {
 		parse(commandStr);
 		if (argument1 != null) {
-			return delegate(commandStr);
+			return delegateChildValidator(commandStr);
 		} else {
 			return false;
 		}
@@ -54,19 +54,30 @@ public class CommandValidator {
 		return argument1;
 	}
 
-	private boolean delegate(String commandStr) {
+	private boolean delegateChildValidator(String commandStr) {
 		switch (argument1.toLowerCase()) {
 		case "create":
 			CreateCommandValidator createCommandValidator = new CreateCommandValidator(bank);
 			return createCommandValidator.validate(commandStr);
 		case "deposit":
-			return false;
+			DepositCommandValidator depositCommandValidator = new DepositCommandValidator(bank);
+			return depositCommandValidator.validate(commandStr);
+		case "withdraw":
+			WithdrawCommandValidator withdrawCommandValidator = new WithdrawCommandValidator(bank);
+			return withdrawCommandValidator.validate(commandStr);
+		case "transfer":
+			TransferCommandValidator transferCommandValidator = new TransferCommandValidator(bank);
+			return transferCommandValidator.validate(commandStr);
+		case "pass":
+			PassTimeCommandValidator passTimeCommandValidator = new PassTimeCommandValidator(bank);
+			return passTimeCommandValidator.validate(commandStr);
 		default:
 			return false;
 		}
 	}
 
 	// Common functions used by child validators
+
 	protected boolean actionIsValid(String actualAction, String expectedAction) {
 		return actualAction.equalsIgnoreCase(expectedAction);
 	}
