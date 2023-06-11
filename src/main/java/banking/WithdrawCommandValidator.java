@@ -22,6 +22,12 @@ public class WithdrawCommandValidator extends CommandValidator {
 			double amount = Double.parseDouble(amountStr);
 			String type = getAccountType(argument2);
 			Account account = bank.retrieveAccount(argument2);
+
+			// Validate actual amount withdrawn
+			if (amount > account.getBalance()) {
+				amount = account.getBalance();
+			}
+
 			switch (type) {
 			case "savings":
 				if (account.getWithdrawsMadeThisMonth() < account.getMaximumWithdrawalsPerMonth()) {

@@ -186,6 +186,54 @@ public class TransferCommandValidatorTest {
 		assertTrue(actual);
 	}
 
+	@Test
+	public void amount_cannot_be_negative() {
+		addAccounts();
+		command = "transfer 00000000 11111111 -1";
+		boolean actual = transferCommandValidator.validate(command);
+
+		assertFalse(actual);
+	}
+
+	@Test
+	public void amount_can_be_zero() {
+		addAccounts();
+		command = "transfer 00000000 11111111 0";
+		boolean actual = transferCommandValidator.validate(command);
+
+		assertTrue(actual);
+	}
+
+	@Test
+	public void can_transfer_from_account_with_zero_balance() {
+		addAccounts();
+		command = "transfer 00000000 11111111 100";
+		boolean actual = transferCommandValidator.validate(command);
+
+		assertTrue(actual);
+	}
+
+	@Test
+	public void amount_can_be_greater_than_from_account_balance() {
+		addAccounts();
+		bank.deposit("00000000", 100);
+		command = "transfer 00000000 11111111 150";
+		boolean actual = transferCommandValidator.validate(command);
+
+		assertTrue(actual);
+	}
+
 	// Make sure all deposit and withdrawal rules apply
 
+	// Testing all withdrawal rules on from account
+	@Test
+	public void cannot_transfer_from_savings_account_more_than_once_per_month() {
+		bank.addAccount("00000000", new SavingsAccount(0));
+		bank.addAccount("11111111", new CheckingAccount(0));
+		bank.transfer("00000000", "11111111", 100);
+		command = "transfer 00000000 11111111 100";
+		boolean actual = transferCommandValidator.validate(command);
+
+		assertTrue(actual);
+	}
 }
