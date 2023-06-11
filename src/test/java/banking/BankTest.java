@@ -80,12 +80,7 @@ public class BankTest {
 
 		double actualBalance = bank.retrieveAccount(ACCOUNT_ID_1).getBalance();
 
-		// Take into account if money withdrawn is greater than balance
-		if (MONEY_TO_WITHDRAW >= DEFAULT_CD_BALANCE) {
-			assertEquals(0, actualBalance);
-		} else {
-			assertEquals(DEFAULT_CD_BALANCE - MONEY_TO_WITHDRAW, actualBalance);
-		}
+		assertEquals(DEFAULT_CD_BALANCE - MONEY_TO_WITHDRAW, actualBalance);
 
 	}
 
@@ -97,12 +92,7 @@ public class BankTest {
 
 		double actualBalance = bank.retrieveAccount(ACCOUNT_ID_1).getBalance();
 
-		// Take into account if money withdrawn is greater than balance
-		if (MONEY_TO_WITHDRAW * 2 >= DEFAULT_CD_BALANCE) {
-			assertEquals(0, actualBalance);
-		} else {
-			assertEquals(DEFAULT_CD_BALANCE - (MONEY_TO_WITHDRAW * 2), actualBalance);
-		}
+		assertEquals(DEFAULT_CD_BALANCE - (MONEY_TO_WITHDRAW * 2), actualBalance);
 
 	}
 
@@ -153,10 +143,19 @@ public class BankTest {
 		bank.addAccount(ACCOUNT_ID_1, new SavingsAccount(1));
 		bank.deposit(ACCOUNT_ID_1, 100);
 		bank.passTime(2);
-
 		double actual = bank.retrieveAccount(ACCOUNT_ID_1).getBalance();
 
 		assertEquals(100.16, actual);
+	}
+
+	@Test
+	public void balance_does_not_change_if_APR_is_0() {
+		bank.addAccount(ACCOUNT_ID_1, new SavingsAccount(0));
+		bank.deposit(ACCOUNT_ID_1, 100);
+		bank.passTime(2);
+		double actual = bank.retrieveAccount(ACCOUNT_ID_1).getBalance();
+
+		assertEquals(100, actual);
 	}
 
 	@Test

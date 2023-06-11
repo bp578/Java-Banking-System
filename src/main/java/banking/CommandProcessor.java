@@ -1,7 +1,7 @@
 package banking;
 
 public class CommandProcessor {
-	private Bank bank;
+	private final Bank bank;
 	private String[] command;
 
 	public CommandProcessor(Bank bank) {
@@ -11,13 +11,16 @@ public class CommandProcessor {
 	public void run(String commandStr) {
 		this.command = commandStr.split(" ");
 		String action = command[0];
-		switch (action.toLowerCase()) {
-		case "create":
+		if (action.equalsIgnoreCase("create")) {
 			runCreateCommand();
-			break;
-		case "deposit":
+		} else if (action.equalsIgnoreCase("deposit")) {
 			runDepositCommand();
-			break;
+		} else if (action.equalsIgnoreCase("withdraw")) {
+			runWithdrawCommand();
+		} else if (action.equalsIgnoreCase("transfer")) {
+			runTransferCommand();
+		} else if (action.equalsIgnoreCase("pass")) {
+			runPassCommand();
 		}
 	}
 
@@ -33,5 +36,17 @@ public class CommandProcessor {
 
 	private void runDepositCommand() {
 		bank.deposit(command[1], Double.parseDouble(command[2]));
+	}
+
+	private void runWithdrawCommand() {
+		bank.withdraw(command[1], Double.parseDouble(command[2]));
+	}
+
+	private void runTransferCommand() {
+		bank.transfer(command[1], command[2], Double.parseDouble(command[3]));
+	}
+
+	private void runPassCommand() {
+		bank.passTime(Integer.parseInt(command[1]));
 	}
 }
