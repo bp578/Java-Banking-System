@@ -35,6 +35,8 @@ public class CommandStorage {
 			transactionHistory.add(state);
 			transactionHistory.addAll(bank.retrieveAccount(entry.getKey()).getTransactionHistory());
 		}
+
+		transactionHistory.addAll(invalidCommands);
 	}
 
 	private String getAccountState(String accountID) {

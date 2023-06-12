@@ -135,4 +135,42 @@ public class CommandStorageTest {
 		assertEquals("withdraw 11111111 0", commandStorage.getTransactionHistory().get(3));
 	}
 
+	@Test
+	public void invalid_command_is_added_at_the_end() {
+		commandStorage.addInvalidCommand("creta cHekIng 3287463287 19");
+		commandProcessor.run("create checking 12345678 0");
+		commandProcessor.run("deposit 12345678 400");
+		commandProcessor.run("withdraw 12345678 0");
+
+		assertEquals(4, commandStorage.getTransactionHistory().size());
+	}
+
+	@Test
+	public void correct_invalid_command_is_added_at_the_end() {
+		commandStorage.addInvalidCommand("creta cHekIng 3287463287 19");
+		commandProcessor.run("create checking 12345678 0");
+		commandProcessor.run("deposit 12345678 400");
+		commandProcessor.run("withdraw 12345678 0");
+
+		assertEquals("Checking 12345678 400.00 0.00", commandStorage.getTransactionHistory().get(0));
+		assertEquals("deposit 12345678 400", commandStorage.getTransactionHistory().get(1));
+		assertEquals("withdraw 12345678 0", commandStorage.getTransactionHistory().get(2));
+		assertEquals("creta cHekIng 3287463287 19", commandStorage.getTransactionHistory().get(3));
+	}
+
+	@Test
+	public void invalid_command_are_in_correct_order() {
+		commandStorage.addInvalidCommand("creta cHekIng 3287463287 19");
+		commandProcessor.run("create checking 12345678 0");
+		commandStorage.addInvalidCommand("dposit 3287463287 foobar");
+		commandProcessor.run("deposit 12345678 400");
+		commandProcessor.run("withdraw 12345678 0");
+
+		assertEquals("Checking 12345678 400.00 0.00", commandStorage.getTransactionHistory().get(0));
+		assertEquals("deposit 12345678 400", commandStorage.getTransactionHistory().get(1));
+		assertEquals("withdraw 12345678 0", commandStorage.getTransactionHistory().get(2));
+		assertEquals("creta cHekIng 3287463287 19", commandStorage.getTransactionHistory().get(3));
+		assertEquals("dposit 3287463287 foobar", commandStorage.getTransactionHistory().get(4));
+	}
+
 }
