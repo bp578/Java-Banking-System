@@ -185,4 +185,15 @@ public class AccountTest {
 
 		assertEquals(2, actual);
 	}
+
+	@Test
+	public void correct_commands_are_in_order() {
+		savingsAccount.addCommand("deposit 12345678 100");
+		savingsAccount.addCommand("withdraw 12345678 100");
+		savingsAccount.addCommand("withdraw 12345678 50");
+
+		assertEquals("deposit 12345678 100", savingsAccount.getTransactionHistory().get(0));
+		assertEquals("withdraw 12345678 100", savingsAccount.getTransactionHistory().get(1));
+		assertEquals("withdraw 12345678 50", savingsAccount.getTransactionHistory().get(2));
+	}
 }

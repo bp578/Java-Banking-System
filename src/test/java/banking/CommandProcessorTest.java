@@ -237,4 +237,79 @@ public class CommandProcessorTest {
 
 	}
 
+	// Testing transaction history on accounts
+	@Test
+	public void deposit_command_is_added_to_accounts_transaction_history() {
+		bank.addAccount("12345678", new CheckingAccount(0));
+		commandProcessor.run("deposit 12345678 0");
+		int actual = bank.retrieveAccount("12345678").getTransactionHistory().size();
+
+		assertEquals(1, actual);
+	}
+
+	@Test
+	public void correct_deposit_command_is_added_to_accounts_transaction_history() {
+		bank.addAccount("12345678", new CheckingAccount(0));
+		commandProcessor.run("deposit 12345678 0");
+		String actual = bank.retrieveAccount("12345678").getTransactionHistory().get(0);
+
+		assertEquals("deposit 12345678 0", actual);
+	}
+
+	@Test
+	public void withdraw_command_is_added_to_accounts_transaction_history() {
+		bank.addAccount("12345678", new CheckingAccount(0));
+		commandProcessor.run("withdraw 12345678 0");
+		int actual = bank.retrieveAccount("12345678").getTransactionHistory().size();
+
+		assertEquals(1, actual);
+	}
+
+	@Test
+	public void correct_withdraw_command_is_added_to_accounts_transaction_history() {
+		bank.addAccount("12345678", new CheckingAccount(0));
+		commandProcessor.run("withdraw 12345678 0");
+		String actual = bank.retrieveAccount("12345678").getTransactionHistory().get(0);
+
+		assertEquals("withdraw 12345678 0", actual);
+	}
+
+	@Test
+	public void transfer_command_is_added_to_both_accounts_transaction_history() {
+		bank.addAccount("00000000", new CheckingAccount(0));
+		bank.addAccount("11111111", new CheckingAccount(0));
+		commandProcessor.run("transfer 00000000 11111111 0");
+
+		assertEquals(1, bank.retrieveAccount("00000000").getTransactionHistory().size());
+		assertEquals(1, bank.retrieveAccount("11111111").getTransactionHistory().size());
+	}
+
+	@Test
+	public void correct_transfer_command_is_added_to_both_accounts_transaction_history() {
+		bank.addAccount("00000000", new CheckingAccount(0));
+		bank.addAccount("11111111", new CheckingAccount(0));
+		commandProcessor.run("transfer 00000000 11111111 0");
+
+		assertEquals("transfer 00000000 11111111 0", bank.retrieveAccount("00000000").getTransactionHistory().get(0));
+		assertEquals("transfer 00000000 11111111 0", bank.retrieveAccount("11111111").getTransactionHistory().get(0));
+
+	}
+
+	@Test
+	public void create_command_is_not_added_to_accounts_transaction_history() {
+		commandProcessor.run("create checking 12345678 2");
+		int actual = bank.retrieveAccount("12345678").getTransactionHistory().size();
+
+		assertEquals(0, actual);
+	}
+
+	@Test
+	public void pass_command_is_not_added_to_accounts_transaction_history() {
+		commandProcessor.run("create cd 12345678 2 2000");
+		commandProcessor.run("pass 3");
+		int actual = bank.retrieveAccount("12345678").getTransactionHistory().size();
+
+		assertEquals(0, actual);
+	}
+
 }

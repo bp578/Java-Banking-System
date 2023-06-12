@@ -15,10 +15,14 @@ public class CommandProcessor {
 			runCreateCommand();
 		} else if (action.equalsIgnoreCase("deposit")) {
 			runDepositCommand();
+			bank.retrieveAccount(command[1]).addCommand(commandStr);
 		} else if (action.equalsIgnoreCase("withdraw")) {
 			runWithdrawCommand();
+			bank.retrieveAccount(command[1]).addCommand(commandStr);
 		} else if (action.equalsIgnoreCase("transfer")) {
 			runTransferCommand();
+			bank.retrieveAccount(command[1]).addCommand(commandStr);
+			bank.retrieveAccount(command[2]).addCommand(commandStr);
 		} else if (action.equalsIgnoreCase("pass")) {
 			runPassCommand();
 		}
