@@ -1,14 +1,14 @@
 package banking;
 
-import java.util.HashMap;
 import java.util.Iterator;
+import java.util.LinkedHashMap;
 import java.util.Map;
 
 public class Bank {
-	private final Map<String, Account> accounts;
+	private final LinkedHashMap<String, Account> accounts;
 
 	Bank() {
-		accounts = new HashMap<>();
+		accounts = new LinkedHashMap<>();
 	}
 
 	public Map<String, Account> getAccounts() {

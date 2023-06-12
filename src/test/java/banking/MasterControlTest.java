@@ -15,7 +15,8 @@ public class MasterControlTest {
 	@BeforeEach
 	public void setUp() {
 		Bank bank = new Bank();
-		masterControl = new MasterControl(new CommandValidator(bank), new CommandProcessor(bank), new CommandStorage());
+		masterControl = new MasterControl(new CommandValidator(bank), new CommandProcessor(bank),
+				new CommandStorage(bank));
 		input = new ArrayList<>();
 	}
 

@@ -20,9 +20,9 @@ public class DepositCommandValidator extends CommandValidator {
 		try {
 			double amount = Double.parseDouble(amountStr);
 			String type = getAccountType(argument2);
-			if (type.equals("savings")) {
+			if (type.equals("Savings")) {
 				return amount >= 0 && amount <= 2500;
-			} else if (type.equals("checking")) {
+			} else if (type.equals("Checking")) {
 				return amount >= 0 && amount <= 1000;
 			} else {
 				return false;
