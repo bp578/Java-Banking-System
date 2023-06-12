@@ -47,6 +47,8 @@ public class CommandValidator {
 			this.argument4 = command[3];
 			this.argument5 = command[4];
 			break;
+		default:
+			this.argument1 = command[0];
 		}
 	}
 
@@ -98,6 +100,25 @@ public class CommandValidator {
 
 	protected boolean accountExists(String accountId) {
 		return bank.retrieveAccount(accountId) != null;
+	}
+
+	protected boolean amountIsADouble(String amount) {
+		try {
+			Double.parseDouble(amount);
+			return true;
+		} catch (NumberFormatException e) {
+			return false;
+		}
+	}
+
+	protected boolean positiveDoubleIsWithinLimit(String n, double limit) {
+		if (amountIsADouble(n)) {
+			double number = Double.parseDouble(n);
+			return number >= 0 && number <= limit;
+		} else {
+			return false;
+		}
+
 	}
 
 }

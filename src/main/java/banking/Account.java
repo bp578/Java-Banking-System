@@ -14,12 +14,12 @@ public abstract class Account {
 	private int withdrawsMadeThisMonth = 0;
 
 	// Constructor for Checking and Savings
-	public Account(double APR) {
+	protected Account(double APR) {
 		this.APR = APR;
 	}
 
 	// Constructor for CD only
-	public Account(double APR, double balance) {
+	protected Account(double APR, double balance) {
 		this.APR = APR;
 		this.balance = balance;
 	}

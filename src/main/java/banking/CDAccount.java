@@ -13,9 +13,7 @@ public class CDAccount extends Account {
 			double interestRate = (APR / 100) / 12;
 			double interestEarned = balance * interestRate;
 			interestEarned = (double) Math.round(interestEarned * 100) / 100;
-			System.out.println(interestEarned);
 			balance += interestEarned;
-			System.out.println(balance);
 		}
 
 	}

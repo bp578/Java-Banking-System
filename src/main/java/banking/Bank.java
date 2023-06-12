@@ -1,8 +1,8 @@
 package banking;
 
-import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.Map;
+import java.util.stream.IntStream;
 
 public class Bank {
 	private final LinkedHashMap<String, Account> accounts;
@@ -33,11 +33,10 @@ public class Bank {
 	}
 
 	public void passTime(int months) {
-		for (int i = 0; i < months; i++) {
-			Iterator<Map.Entry<String, Account>> it = accounts.entrySet().iterator();
+		IntStream.range(0, months).mapToObj(i -> accounts.entrySet().iterator()).forEach(it -> {
 			while (it.hasNext()) {
-				Map.Entry pair = (Map.Entry) it.next();
-				Account account = (Account) pair.getValue();
+				var pair = it.next();
+				Account account = pair.getValue();
 
 				account.incrementAge();
 				account.resetWithdrawMadeThisMonth();
@@ -48,7 +47,7 @@ public class Bank {
 				}
 				account.monthlyAprCalculation();
 			}
-		}
+		});
 	}
 
 	public void transfer(String fromID, String toID, double moneyToTransfer) {

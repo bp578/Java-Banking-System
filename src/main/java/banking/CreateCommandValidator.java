@@ -22,33 +22,29 @@ public class CreateCommandValidator extends CommandValidator {
 	}
 
 	private boolean accountTypeIsValid(String accountType) {
-		if ((accountType.equalsIgnoreCase("savings") || accountType.equalsIgnoreCase("checking"))
-				&& command.length == 4) {
-			return true;
-		} else if (accountType.equalsIgnoreCase("cd") && command.length == 5) {
+		if (accountTypeIsCheckingOrSavings(accountType) && command.length == 4) {
 			return true;
 		} else {
-			return false;
+			return accountType.equalsIgnoreCase("cd") && command.length == 5;
 		}
 
 	}
 
 	private boolean APRisValid(String aprStr) {
-		try {
-			Double APR = Double.parseDouble(aprStr);
-			return APR >= 0 && APR <= 10;
-		} catch (NumberFormatException e) {
+		return positiveDoubleIsWithinLimit(aprStr, 10);
+	}
+
+	private boolean balanceIsValid(String balanceStr) {
+		if (amountIsADouble(balanceStr)) {
+			Double balance = Double.parseDouble(balanceStr);
+			return balance > 0 && balance <= 10000;
+		} else {
 			return false;
 		}
 	}
 
-	private boolean balanceIsValid(String balanceStr) {
-		try {
-			double balance = Double.parseDouble(balanceStr);
-			return balance > 0 && balance <= 10000;
-		} catch (NumberFormatException e) {
-			return false;
-		}
+	private boolean accountTypeIsCheckingOrSavings(String accountType) {
+		return (accountType.equalsIgnoreCase("savings") || accountType.equalsIgnoreCase("checking"));
 	}
 
 }
