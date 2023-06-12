@@ -18,26 +18,27 @@ public class CommandStorageTest {
 
 	@Test
 	public void command_storage_starts_with_no_commands() {
-		List<String> actual = commandStorage.getCommands();
+		List<String> actual = commandStorage.getInvalidCommands();
 
 		assertTrue(actual.isEmpty());
 	}
 
 	@Test
-	public void commands_stored_equals_commands_added() {
-		commandStorage.add("create cheking 123456789 1.0");
-		commandStorage.add("deps0T 1234 5000000 abc");
+	public void invalid_commands_stored_equals_commands_added() {
+		commandStorage.addInvalidCommand("create cheking 123456789 1.0");
+		commandStorage.addInvalidCommand("deps0T 1234 5000000 abc");
 
-		assertEquals(2, commandStorage.getCommands().size());
+		assertEquals(2, commandStorage.getInvalidCommands().size());
 
 	}
 
 	@Test
-	public void commands_added_are_correct() {
-		commandStorage.add("create cheking 123456789 1.0");
-		commandStorage.add("deps0T 1234 5000000 abc");
+	public void invalid_commands_added_are_correct() {
+		commandStorage.addInvalidCommand("create cheking 123456789 1.0");
+		commandStorage.addInvalidCommand("deps0T 1234 5000000 abc");
 
-		assertEquals("create cheking 123456789 1.0", commandStorage.getCommands().get(0));
-		assertEquals("deps0T 1234 5000000 abc", commandStorage.getCommands().get(1));
+		assertEquals("create cheking 123456789 1.0", commandStorage.getInvalidCommands().get(0));
+		assertEquals("deps0T 1234 5000000 abc", commandStorage.getInvalidCommands().get(1));
 	}
+
 }

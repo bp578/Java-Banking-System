@@ -1,7 +1,11 @@
 package banking;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public abstract class Account {
 	protected final double APR;
+	private final List<String> transactionHistory = new ArrayList<>();
 	protected String type;
 	protected double balance;
 	protected int maximumWithdrawalsPerMonth;
@@ -89,5 +93,13 @@ public abstract class Account {
 
 	public void increaseWithdrawalsMadeThisMonth(int val) {
 		withdrawsMadeThisMonth += val;
+	}
+
+	public List<String> getTransactionHistory() {
+		return transactionHistory;
+	}
+
+	public void addCommand(String command) {
+		transactionHistory.add(command);
 	}
 }

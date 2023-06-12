@@ -4,13 +4,14 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class CommandStorage {
-	List<String> commands = new ArrayList<>();
+	List<String> invalidCommands = new ArrayList<>();
 
-	public List<String> getCommands() {
-		return commands;
+	public List<String> getInvalidCommands() {
+		return invalidCommands;
 	}
 
-	public void add(String command) {
-		commands.add(command);
+	public void addInvalidCommand(String command) {
+		invalidCommands.add(command);
 	}
+
 }

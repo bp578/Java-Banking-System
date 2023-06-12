@@ -168,4 +168,21 @@ public class AccountTest {
 		assertEquals(1007.52, actual);
 
 	}
+
+	// Testing command history
+	@Test
+	public void command_history_is_initially_empty() {
+		int actual = savingsAccount.getTransactionHistory().size();
+
+		assertEquals(0, actual);
+	}
+
+	@Test
+	public void command_history_size_is_equal_to_commands_added() {
+		savingsAccount.addCommand("deposit 12345678 100");
+		savingsAccount.addCommand("withdraw 12345678 100");
+		int actual = savingsAccount.getTransactionHistory().size();
+
+		assertEquals(2, actual);
+	}
 }

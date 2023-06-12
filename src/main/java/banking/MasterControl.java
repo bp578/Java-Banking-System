@@ -19,9 +19,9 @@ public class MasterControl {
 			if (commandValidator.validate(command)) {
 				commandProcessor.run(command);
 			} else {
-				commandStorage.add(command);
+				commandStorage.addInvalidCommand(command);
 			}
 		}
-		return commandStorage.getCommands();
+		return commandStorage.getInvalidCommands();
 	}
 }
